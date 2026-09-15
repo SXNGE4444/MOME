@@ -99,10 +99,10 @@ final class WorkspaceStore: ObservableObject {
     }
 
     private func load() {
-        guard let data = try? Data(contentsOf: storageURL),
-              let decoded = try? JSONDecoder().decode([MOMEProject].self, from: data) else {
-            return
-        }
+        guard let data = try? Data(contentsOf: storageURL) else { return }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        guard let decoded = try? decoder.decode([MOMEProject].self, from: data) else { return }
         projects = decoded
     }
 
