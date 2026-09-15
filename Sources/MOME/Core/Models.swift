@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Navigation
 
-enum SidebarSection: String, CaseIterable, Identifiable {
+enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
     case dashboard = "Command Center"
     case projects = "Projects"
     case plan = "Plan"
@@ -30,7 +30,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
 
 // MARK: - Projects
 
-enum ProjectKind: String, Codable, CaseIterable {
+enum ProjectKind: String, Codable, CaseIterable, Hashable {
     case mobile
     case web
     case nativeMac = "native-mac"
@@ -48,7 +48,7 @@ enum ProjectKind: String, Codable, CaseIterable {
     }
 }
 
-enum TaskStage: String, Codable, CaseIterable, Identifiable {
+enum TaskStage: String, Codable, CaseIterable, Identifiable, Hashable {
     case backlog
     case building
     case testing
@@ -59,7 +59,7 @@ enum TaskStage: String, Codable, CaseIterable, Identifiable {
     var label: String { rawValue.capitalized }
 }
 
-enum TaskKind: String, Codable, CaseIterable, Identifiable {
+enum TaskKind: String, Codable, CaseIterable, Identifiable, Hashable {
     case product
     case design
     case content
@@ -103,7 +103,7 @@ struct ForgeConfiguration: Codable {
 
 // MARK: - Tools
 
-enum ToolCategory: String, Codable, CaseIterable {
+enum ToolCategory: String, Codable, CaseIterable, Hashable {
     case editor = "Editors"
     case apple = "Apple"
     case android = "Android"
@@ -113,7 +113,7 @@ enum ToolCategory: String, Codable, CaseIterable {
     case source = "Source Control"
 }
 
-enum ToolID: String, Codable, CaseIterable {
+enum ToolID: String, Codable, CaseIterable, Hashable {
     case xcode
     case vscode
     case androidStudio
@@ -132,7 +132,7 @@ enum ToolID: String, Codable, CaseIterable {
     case docker
 }
 
-enum InstallationState: String, Codable {
+enum InstallationState: String, Codable, Hashable {
     case installed
     case missing
 }
@@ -150,7 +150,7 @@ struct ToolDescriptor: Identifiable, Codable, Hashable {
 
 // MARK: - Commands / Safety
 
-enum CommandRisk: String, Codable, CaseIterable {
+enum CommandRisk: String, Codable, CaseIterable, Hashable {
     case read
     case safe
     case write
@@ -182,7 +182,7 @@ struct PendingAction: Identifiable {
 
 // MARK: - Devices
 
-enum DevicePlatform: String, Codable {
+enum DevicePlatform: String, Codable, Hashable {
     case iOS
     case android
 }
@@ -197,7 +197,7 @@ struct DeviceInfo: Identifiable, Hashable {
 
 // MARK: - Processes
 
-enum SessionState: String {
+enum SessionState: String, Hashable {
     case running
     case succeeded
     case failed
