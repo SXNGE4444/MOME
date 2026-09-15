@@ -1,0 +1,16 @@
+{
+  "name": "Pink Mist",
+  "type": "mobile",
+  "repository": "git@github.com:SXNGE4444/PINK-MIST-APPP-.git",
+  "commands": {
+    "dev": "pnpm expo start",
+    "ios": "pnpm expo run:ios",
+    "android": "pnpm expo run:android",
+    "test": "pnpm test"
+  },
+  "editors": ["vscode", "xcode", "android-studio"],
+  "deployment": {
+    "ios": "testflight",
+    "android": "play-console"
+  }
+}
