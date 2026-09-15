@@ -70,13 +70,14 @@ enum ToolScanner {
         let path = paths.first(where: { fileManager.fileExists(atPath: $0) })
         let cliPath = cli.flatMap { Shell.which($0) }
         let installed = path != nil || cliPath != nil
+        let version = installed ? versionCommand.flatMap { Shell.capture($0) } : nil
         return ToolDescriptor(
             id: id,
             name: name,
             category: category,
             state: installed ? .installed : .missing,
             location: path ?? cliPath,
-            version: installed ? versionCommand.flatMap(Shell.capture) : nil
+            version: version
         )
     }
 
