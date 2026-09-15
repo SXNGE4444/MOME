@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MOMECard<Content: View>: View {
     var title: String?
-    @ViewBuilder var content: Content
+    var content: Content
 
     init(_ title: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
