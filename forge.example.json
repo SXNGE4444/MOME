@@ -4,13 +4,36 @@
   "repository": "git@github.com:SXNGE4444/PINK-MIST-APPP-.git",
   "commands": {
     "dev": "pnpm expo start",
-    "ios": "pnpm expo run:ios",
-    "android": "pnpm expo run:android",
-    "test": "pnpm test"
+    "lint": "pnpm lint"
   },
-  "editors": ["vscode", "xcode", "android-studio"],
+  "editors": [
+    "vscode",
+    "xcode",
+    "android-studio"
+  ],
   "deployment": {
     "ios": "testflight",
     "android": "play-console"
+  },
+  "settings": {
+    "ios.workspace": "ios/PinkMist.xcworkspace",
+    "ios.scheme": "PinkMist",
+    "ios.destination": "platform=iOS Simulator,name=iPhone 16 Pro",
+    "ios.bundleId": "za.co.example.pinkmist",
+    "ios.archivePath": "build/mome/PinkMist.xcarchive",
+    "ios.exportOptionsPlist": "ios/ExportOptions.plist",
+    "ios.exportPath": "build/mome/export",
+    "ios.ipaPath": "build/mome/export/PinkMist.ipa",
+    "ios.appPath": "build/PinkMist.app",
+    "android.package": "za.co.example.pinkmist",
+    "android.activity": ".MainActivity",
+    "android.apkPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "android.aabPath": "android/app/build/outputs/bundle/release/app-release.aab",
+    "android.playTrack": "internal",
+    "android.playJsonKey": "/Users/YOU/.config/google-play/service-account.json",
+    "blender.file": "assets/product.blend",
+    "blender.frame": "1",
+    "unity.buildMethod": "BuildScript.BuildMac",
+    "unreal.project": "Game.uproject"
   }
 }

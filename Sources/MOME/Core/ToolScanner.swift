@@ -36,6 +36,7 @@ enum ToolScanner {
         await Task.detached(priority: .userInitiated) {
             let home = FileManager.default.homeDirectoryForCurrentUser.path
             let androidADB = "\(home)/Library/Android/sdk/platform-tools/adb"
+            let androidEmulator = "\(home)/Library/Android/sdk/emulator/emulator"
 
             return [
                 app(.xcode, "Xcode", .apple, paths: ["/Applications/Xcode.app"], versionCommand: "xcodebuild -version | head -1"),
@@ -52,6 +53,10 @@ enum ToolScanner {
                 cli(.wrangler, "Cloudflare Wrangler", .cloud, executable: "wrangler", versionCommand: "wrangler --version"),
                 cli(.vercel, "Vercel CLI", .cloud, executable: "vercel", versionCommand: "vercel --version"),
                 fileOrCLI(.adb, "Android Debug Bridge", .android, file: androidADB, executable: "adb", versionCommand: "adb version | head -1"),
+                fileOrCLI(.emulator, "Android Emulator", .android, file: androidEmulator, executable: "emulator", versionCommand: "emulator -version | head -1"),
+                cli(.eas, "Expo EAS CLI", .release, executable: "eas", versionCommand: "eas --version"),
+                cli(.supabase, "Supabase CLI", .cloud, executable: "supabase", versionCommand: "supabase --version"),
+                cli(.fastlane, "fastlane", .release, executable: "fastlane", versionCommand: "fastlane --version | tail -1"),
                 cli(.podman, "Podman", .runtime, executable: "podman", versionCommand: "podman --version"),
                 cli(.docker, "Docker", .runtime, executable: "docker", versionCommand: "docker --version")
             ]
@@ -70,14 +75,13 @@ enum ToolScanner {
         let path = paths.first(where: { fileManager.fileExists(atPath: $0) })
         let cliPath = cli.flatMap { Shell.which($0) }
         let installed = path != nil || cliPath != nil
-        let version = installed ? versionCommand.flatMap { Shell.capture($0) } : nil
         return ToolDescriptor(
             id: id,
             name: name,
             category: category,
             state: installed ? .installed : .missing,
             location: path ?? cliPath,
-            version: version
+            version: installed ? versionCommand.flatMap { Shell.capture($0) } : nil
         )
     }
 
@@ -109,13 +113,19 @@ enum ToolScanner {
     ) -> ToolDescriptor {
         let direct = FileManager.default.fileExists(atPath: file) ? file : nil
         let path = direct ?? Shell.which(executable)
+        let quoted = path.map(Shell.shellQuote)
+        let version = path == nil ? nil : Shell.capture(
+            executable == "emulator" && quoted != nil
+                ? "\(quoted!) -version | head -1"
+                : versionCommand
+        )
         return ToolDescriptor(
             id: id,
             name: name,
             category: category,
             state: path == nil ? .missing : .installed,
             location: path,
-            version: path == nil ? nil : Shell.capture(versionCommand)
+            version: version
         )
     }
 
@@ -125,7 +135,7 @@ enum ToolScanner {
         var location: String?
 
         if let entries = try? manager.contentsOfDirectory(atPath: root),
-           let engine = entries.first(where: { $0.hasPrefix("UE_") }) {
+           let engine = entries.filter({ $0.hasPrefix("UE_") }).sorted().last {
             location = "\(root)/\(engine)"
         } else if manager.fileExists(atPath: "/Applications/Epic Games Launcher.app") {
             location = "/Applications/Epic Games Launcher.app"

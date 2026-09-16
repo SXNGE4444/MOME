@@ -13,13 +13,6 @@ enum AIProvider: String, CaseIterable, Identifiable {
         }
     }
 
-    var endpoint: URL {
-        switch self {
-        case .openAI: return URL(string: "https://api.openai.com/v1/responses")!
-        case .deepSeek: return URL(string: "https://api.deepseek.com/responses")!
-        }
-    }
-
     var defaultModel: String {
         switch self {
         case .openAI: return "gpt-5.6"
@@ -30,31 +23,32 @@ enum AIProvider: String, CaseIterable, Identifiable {
 
 struct AIService {
     func ask(_ prompt: String, provider: AIProvider, apiKey: String, model: String? = nil) async throws -> String {
-        var request = URLRequest(url: provider.endpoint)
+        switch provider {
+        case .openAI:
+            return try await askOpenAI(prompt, apiKey: apiKey, model: model ?? provider.defaultModel)
+        case .deepSeek:
+            return try await askDeepSeek(prompt, apiKey: apiKey, model: model ?? provider.defaultModel)
+        }
+    }
+
+    private func askOpenAI(_ prompt: String, apiKey: String, model: String) async throws -> String {
+        var request = URLRequest(url: URL(string: "https://api.openai.com/v1/responses")!)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 120
-
-        let body: [String: Any] = [
-            "model": model ?? provider.defaultModel,
+        request.timeoutInterval = 180
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "model": model,
             "input": prompt
-        ]
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        ])
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse,
-              (200..<300).contains(http.statusCode) else {
-            let message = String(data: data, encoding: .utf8) ?? "Unknown API response"
-            throw AIServiceError.requestFailed(message)
+        let data = try await perform(request)
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw AIServiceError.unreadableResponse
         }
 
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        if let direct = json?["output_text"] as? String, !direct.isEmpty {
-            return direct
-        }
-
-        if let output = json?["output"] as? [[String: Any]] {
+        if let direct = json["output_text"] as? String, !direct.isEmpty { return direct }
+        if let output = json["output"] as? [[String: Any]] {
             let texts = output.flatMap { item -> [String] in
                 guard let content = item["content"] as? [[String: Any]] else { return [] }
                 return content.compactMap { part in
@@ -65,8 +59,41 @@ struct AIService {
             }
             if !texts.isEmpty { return texts.joined(separator: "\n") }
         }
-
         throw AIServiceError.unreadableResponse
+    }
+
+    private func askDeepSeek(_ prompt: String, apiKey: String, model: String) async throws -> String {
+        var request = URLRequest(url: URL(string: "https://api.deepseek.com/chat/completions")!)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 180
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "model": model,
+            "messages": [["role": "user", "content": prompt]],
+            "stream": false
+        ])
+
+        let data = try await perform(request)
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let choices = json["choices"] as? [[String: Any]],
+              let first = choices.first,
+              let message = first["message"] as? [String: Any],
+              let content = message["content"] as? String,
+              !content.isEmpty else {
+            throw AIServiceError.unreadableResponse
+        }
+        return content
+    }
+
+    private func perform(_ request: URLRequest) async throws -> Data {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse,
+              (200..<300).contains(http.statusCode) else {
+            let message = String(data: data, encoding: .utf8) ?? "Unknown API response"
+            throw AIServiceError.requestFailed(message)
+        }
+        return data
     }
 }
 

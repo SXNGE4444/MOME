@@ -11,6 +11,7 @@ enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
     case tools = "Integrations"
     case ai = "Forge AI"
     case deploy = "Deployments"
+    case learn = "Learn"
 
     var id: String { rawValue }
 
@@ -24,6 +25,7 @@ enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
         case .tools: return "puzzlepiece.extension"
         case .ai: return "sparkles"
         case .deploy: return "cloud"
+        case .learn: return "graduationcap"
         }
     }
 }
@@ -86,10 +88,15 @@ struct MOMEProject: Identifiable, Codable, Hashable {
     var commands: [String: String] = [:]
     var editors: [String] = []
     var deployment: [String: String] = [:]
+    var settings: [String: String]?
     var tasks: [ProjectTask] = []
     var createdAt: Date = Date()
 
     var folderURL: URL { URL(fileURLWithPath: path) }
+
+    func setting(_ key: String) -> String? {
+        settings?[key]?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+    }
 }
 
 struct ForgeConfiguration: Codable {
@@ -99,6 +106,7 @@ struct ForgeConfiguration: Codable {
     var commands: [String: String]?
     var editors: [String]?
     var deployment: [String: String]?
+    var settings: [String: String]?
 }
 
 // MARK: - Tools
@@ -111,6 +119,7 @@ enum ToolCategory: String, Codable, CaseIterable, Hashable {
     case runtime = "Runtimes"
     case cloud = "Cloud"
     case source = "Source Control"
+    case release = "Release & Distribution"
 }
 
 enum ToolID: String, Codable, CaseIterable, Hashable {
@@ -128,8 +137,12 @@ enum ToolID: String, Codable, CaseIterable, Hashable {
     case wrangler
     case vercel
     case adb
+    case emulator
     case podman
     case docker
+    case eas
+    case supabase
+    case fastlane
 }
 
 enum InstallationState: String, Codable, Hashable {
@@ -165,6 +178,11 @@ enum CommandRisk: String, Codable, CaseIterable, Hashable {
     }
 }
 
+struct SecretBinding: Hashable {
+    var environmentVariable: String
+    var keychainAccount: String
+}
+
 struct ToolAction: Identifiable, Hashable {
     let id = UUID()
     var title: String
@@ -172,6 +190,8 @@ struct ToolAction: Identifiable, Hashable {
     var risk: CommandRisk
     var tool: ToolID?
     var symbol: String = "play.fill"
+    var help: String? = nil
+    var secretBindings: [SecretBinding] = []
 }
 
 struct PendingAction: Identifiable {
@@ -193,6 +213,16 @@ struct DeviceInfo: Identifiable, Hashable {
     var platform: DevicePlatform
     var state: String
     var runtime: String?
+    var virtual: Bool = true
+
+    var isBooted: Bool {
+        let value = state.lowercased()
+        return value.contains("booted") || value == "device" || value == "online" || value == "running"
+    }
+
+    var isAndroidAVDDefinition: Bool {
+        platform == .android && id.hasPrefix("avd:")
+    }
 }
 
 // MARK: - Processes
@@ -214,4 +244,9 @@ struct ProcessSession: Identifiable {
     var state: SessionState
     var startedAt: Date
     var exitCode: Int32?
+    var interactive: Bool = false
+}
+
+private extension String {
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }

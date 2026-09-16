@@ -2,35 +2,35 @@
 
 **MOME — Developer Command Center for macOS**
 
-A native macOS control plane for planning, building, testing, running and shipping software from one dashboard.
+MOME is a native macOS control plane for planning, building, testing, running and shipping software from one dashboard. It orchestrates real local CLIs, applications, simulators, emulators, cloud tools and AI providers rather than replacing them.
 
-MOME is designed to orchestrate local developer tools rather than replace them. The first MVP targets Xcode, iOS Simulator, VS Code, Android Studio/ADB, Blender, Unity, Unreal Engine, Git, Node/pnpm, Python, Cloudflare Wrangler, Vercel, OpenAI and DeepSeek.
+## Current operational surface
 
-## Product principles
+- Native SwiftUI macOS application
+- Stack-aware project registry and `forge.json` configuration
+- PTY-backed persistent shell sessions plus one-shot build/deploy jobs
+- Live stdout/stderr, process stop, interrupt and input
+- Xcode project inspection, build/test, archive and IPA export
+- iOS Simulator discovery, boot, boot-status wait, shutdown, erase, app install and launch
+- TestFlight upload path using App Store Connect API credentials
+- Android Studio/Gradle APK and AAB builds
+- Android ADB devices, AVD discovery/start/stop, logcat, APK install and package launch
+- Google Play upload path through `fastlane supply`
+- Expo local/iOS/Android actions plus EAS build/submit
+- Blender open, headless frame render and animation render
+- Unity batch EditMode tests and configurable batch build methods
+- Unreal AutomationTool macOS packaging
+- Git status/fetch/pull and GitHub CLI pull-request/Actions inspection
+- Supabase local stack, Functions, DB push and guarded local reset
+- Cloudflare Wrangler auth/dev/deploy
+- Vercel auth/dev/preview/production
+- OpenAI Responses API integration
+- DeepSeek Chat Completions integration
+- macOS Keychain credential vault
+- Guided first-run setup and MOME Academy walkthroughs
+- READ / SAFE / WRITE / RELEASE / DANGEROUS action gates
 
-- **Local-first:** projects, tool detection and command execution live on the Mac.
-- **Reality-first:** statuses come from actual installed tools/processes; no fake dashboard data.
-- **Safe orchestration:** read/safe actions can run directly; write/release/dangerous actions are permission-gated.
-- **Adapter architecture:** every external tool implements a common adapter contract.
-- **Secrets in Keychain:** API credentials are never stored in `forge.json` or source control.
-
-## MVP
-
-- SwiftUI macOS application shell
-- Command Center dashboard
-- Workspace/project registry
-- Installed-tool scanner
-- Process supervisor with streaming output
-- Command palette
-- Project detail surface
-- Device/simulator control surfaces
-- Tool-adapter protocol and initial adapters
-- OpenAI/DeepSeek provider abstraction
-- Cloudflare/Vercel deployment command adapters
-- Keychain-backed credential vault
-- `forge.json` project configuration model
-
-## Run
+## Build and run
 
 Requirements: macOS 14+, Xcode 16+ / Swift 6 toolchain.
 
@@ -41,12 +41,63 @@ swift build
 swift run MOME
 ```
 
-You can also open `Package.swift` in Xcode and run the **MOME** executable target.
+Or open `Package.swift` in Xcode and run the **MOME** executable target.
 
-## Safety
+## Build `MOME.app`
 
-MOME intentionally does **not** silently execute production deploys, destructive shell commands, database resets, or release actions. Commands have explicit risk levels and privileged operations require user approval in the UI.
+```bash
+bash scripts/build-app.sh
+open dist/MOME.app
+```
 
-## Status
+The local development bundle is ad-hoc signed. Public distribution should use Developer ID signing, hardened runtime and Apple notarization.
 
-This repository is being initialized as the native macOS MVP. See `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` for the implementation model and release plan.
+## First run
+
+MOME opens **Guided Setup** on first launch. It:
+
+1. scans the Mac for supported tools;
+2. lets you store OpenAI, DeepSeek and App Store Connect identifiers in Keychain;
+3. helps you register project folders;
+4. points you to the in-app Learn section.
+
+You can reopen it from **MOME → Guided Setup**.
+
+## Project configuration
+
+Basic actions are detected automatically from files such as `ios/`, `android/`, `package.json`, `eas.json`, `wrangler.toml`, `vercel.json`, `supabase/`, `.blend`, `.uproject`, `Assets/ProjectSettings` and `.git`.
+
+Release workflows need explicit values. Copy `forge.example.json` to a project's root as `forge.json`, remove settings that do not apply, and replace example values with real project values.
+
+Useful settings include:
+
+- `ios.workspace`, `ios.project`, `ios.scheme`, `ios.destination`
+- `ios.bundleId`, `ios.appPath`
+- `ios.archivePath`, `ios.exportOptionsPlist`, `ios.exportPath`, `ios.ipaPath`
+- `android.package`, `android.activity`, `android.apkPath`, `android.aabPath`
+- `android.playTrack`, `android.playJsonKey`
+- `blender.file`, `blender.frame`
+- `unity.buildMethod`
+- `unreal.project`
+
+## TestFlight credentials
+
+MOME stores the App Store Connect **Key ID** and **Issuer ID** in Keychain. The `.p8` private key stays as a local file and must be placed where Apple's command-line upload tooling can resolve `AuthKey_<KEYID>.p8`. Never commit the key to Git.
+
+## Google Play credentials
+
+MOME's Play Console action uses `fastlane supply`. `android.playJsonKey` should point to a local Google Play service-account JSON file. Do not commit that credential to the repository.
+
+## Safety model
+
+- **READ** — inspect state
+- **SAFE** — local development/test processes
+- **WRITE** — changes local state; requires approval
+- **RELEASE** — affects remote/production distribution; requires approval
+- **DANGEROUS** — destructive/reset actions; requires approval
+
+MOME does not allow AI responses to bypass these action gates.
+
+## Important limitation
+
+MOME can only execute integrations that are correctly installed, authenticated and configured on the Mac. A green MOME control does not manufacture missing Apple signing identities, App Store Connect access, Google Play service accounts, engine licenses, cloud permissions or project-specific build scripts. Failed commands stream their real output into Terminal and can be passed directly to Forge AI for diagnosis.
