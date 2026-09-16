@@ -16,5 +16,18 @@ jobs:
       - name: Swift version
         run: swift --version
 
-      - name: Build MOME
+      - name: Build MOME debug
         run: swift build -c debug
+
+      - name: Build MOME.app
+        run: bash scripts/build-app.sh
+
+      - name: Package app
+        run: ditto -c -k --sequesterRsrc --keepParent dist/MOME.app MOME-macOS-arm64.zip
+
+      - name: Upload MOME app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOME-macOS-arm64
+          path: MOME-macOS-arm64.zip
+          if-no-files-found: error
