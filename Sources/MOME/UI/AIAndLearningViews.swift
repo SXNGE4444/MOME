@@ -30,7 +30,7 @@ struct AIView: View {
                 Picker("Provider", selection: $provider) {
                     ForEach(AIProvider.allCases) { Text($0.rawValue).tag($0) }
                 }
-                .pickerStyle(.segmented).frame(width: 240)
+                .pickerStyle(.segmented).frame(width: 410)
             }
 
             MOMECard("Secure API Credential") {
@@ -230,6 +230,7 @@ struct SetupAssistantView: View {
     @State private var step = 0
     @State private var openAIKey = ""
     @State private var deepSeekKey = ""
+    @State private var experientialLabsKey = ""
     @State private var ascKeyID = ""
     @State private var ascIssuerID = ""
     @State private var statusMessage: String?
@@ -303,6 +304,7 @@ struct SetupAssistantView: View {
                 Text("Secrets are stored in macOS Keychain, not forge.json or the project repository.").foregroundStyle(.secondary)
                 credentialField("OpenAI API key", text: $openAIKey, secure: true)
                 credentialField("DeepSeek API key", text: $deepSeekKey, secure: true)
+                credentialField("Experiential Labs API key", text: $experientialLabsKey, secure: true)
                 credentialField("App Store Connect Key ID", text: $ascKeyID, secure: false)
                 credentialField("App Store Connect Issuer ID", text: $ascIssuerID, secure: false)
                 HStack {
@@ -349,6 +351,7 @@ struct SetupAssistantView: View {
     private func loadCredentials() {
         openAIKey = model.keychain.read(account: "openai.apiKey") ?? ""
         deepSeekKey = model.keychain.read(account: "deepseek.apiKey") ?? ""
+        experientialLabsKey = model.keychain.read(account: "experientiallabs.apiKey") ?? ""
         ascKeyID = model.keychain.read(account: "appstore.keyID") ?? ""
         ascIssuerID = model.keychain.read(account: "appstore.issuerID") ?? ""
     }
@@ -357,6 +360,7 @@ struct SetupAssistantView: View {
         do {
             if !openAIKey.isEmpty { try model.keychain.save(openAIKey, account: "openai.apiKey") }
             if !deepSeekKey.isEmpty { try model.keychain.save(deepSeekKey, account: "deepseek.apiKey") }
+            if !experientialLabsKey.isEmpty { try model.keychain.save(experientialLabsKey, account: "experientiallabs.apiKey") }
             if !ascKeyID.isEmpty { try model.keychain.save(ascKeyID, account: "appstore.keyID") }
             if !ascIssuerID.isEmpty { try model.keychain.save(ascIssuerID, account: "appstore.issuerID") }
             statusMessage = "Saved to Keychain."
