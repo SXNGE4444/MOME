@@ -39,7 +39,12 @@ enum AIProvider: String, CaseIterable, Identifiable {
     }
 
     var keychainAccount: String {
-        "ai.\(storageID).apiKey"
+        switch self {
+        case .openAI: return "openai.apiKey"
+        case .deepSeek: return "deepseek.apiKey"
+        case .huggingFace: return "huggingface.apiKey"
+        default: return "ai.\(storageID).apiKey"
+        }
     }
 
     var defaultModel: String {
