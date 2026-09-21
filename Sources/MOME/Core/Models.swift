@@ -117,6 +117,7 @@ enum ToolCategory: String, Codable, CaseIterable, Hashable {
     case android = "Android"
     case engine3D = "3D / Engines"
     case runtime = "Runtimes"
+    case ai = "AI Runtimes"
     case cloud = "Cloud"
     case source = "Source Control"
     case release = "Release & Distribution"
@@ -143,6 +144,15 @@ enum ToolID: String, Codable, CaseIterable, Hashable {
     case eas
     case supabase
     case fastlane
+    case huggingFace
+    case lmStudio
+    case ollama
+    case vllm
+    case llamaServer
+    case localAI
+    case jan
+    case mlxLM
+    case tgi
 }
 
 enum InstallationState: String, Codable, Hashable {
