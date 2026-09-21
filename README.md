@@ -26,6 +26,7 @@ MOME is a native macOS control plane for planning, building, testing, running an
 - Vercel auth/dev/preview/production
 - OpenAI Responses API integration
 - DeepSeek Chat Completions integration
+- Experiential Labs Chat Completions integration (default model: `gemini-3.7-flash`)
 - macOS Keychain credential vault
 - Guided first-run setup and MOME Academy walkthroughs
 - READ / SAFE / WRITE / RELEASE / DANGEROUS action gates
@@ -57,7 +58,7 @@ The local development bundle is ad-hoc signed. Public distribution should use De
 MOME opens **Guided Setup** on first launch. It:
 
 1. scans the Mac for supported tools;
-2. lets you store OpenAI, DeepSeek and App Store Connect identifiers in Keychain;
+2. lets you store OpenAI, DeepSeek, Experiential Labs and App Store Connect identifiers in Keychain;
 3. helps you register project folders;
 4. points you to the in-app Learn section.
 
