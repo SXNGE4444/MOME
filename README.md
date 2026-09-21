@@ -26,6 +26,10 @@ MOME is a native macOS control plane for planning, building, testing, running an
 - Vercel auth/dev/preview/production
 - OpenAI Responses API integration
 - DeepSeek Chat Completions integration
+- Hugging Face Inference Providers for open-weight cloud models
+- Local/open-weight AI connectors for LM Studio, Ollama, vLLM, llama.cpp, LocalAI, Jan, MLX-LM and Hugging Face TGI
+- Custom OpenAI-compatible endpoint support for additional inference providers and private servers
+- Local model discovery through compatible `/v1/models` endpoints
 - macOS Keychain credential vault
 - Guided first-run setup and MOME Academy walkthroughs
 - READ / SAFE / WRITE / RELEASE / DANGEROUS action gates
@@ -57,11 +61,30 @@ The local development bundle is ad-hoc signed. Public distribution should use De
 MOME opens **Guided Setup** on first launch. It:
 
 1. scans the Mac for supported tools;
-2. lets you store OpenAI, DeepSeek and App Store Connect identifiers in Keychain;
+2. lets you store OpenAI, DeepSeek, Hugging Face and App Store Connect identifiers in Keychain;
 3. helps you register project folders;
 4. points you to the in-app Learn section.
 
 You can reopen it from **MOME → Guided Setup**.
+
+## AI connectors
+
+Forge AI can connect to cloud APIs and local open-weight runtimes from the same interface. Each provider keeps its own endpoint and model selection, while secrets stay in macOS Keychain.
+
+Built-in presets:
+
+- **Hugging Face Inference Providers** — one Hugging Face token can route supported open-weight models through Hugging Face's provider network.
+- **LM Studio** — defaults to `http://127.0.0.1:1234/v1/chat/completions`.
+- **Ollama** — defaults to `http://127.0.0.1:11434/v1/chat/completions`.
+- **vLLM** — defaults to `http://127.0.0.1:8000/v1/chat/completions`.
+- **llama.cpp** — defaults to `http://127.0.0.1:8080/v1/chat/completions`.
+- **LocalAI** — defaults to `http://127.0.0.1:8080/v1/chat/completions`.
+- **Jan** — defaults to `http://127.0.0.1:1337/v1/chat/completions`.
+- **MLX-LM** — defaults to `http://127.0.0.1:8080/v1/chat/completions`.
+- **Hugging Face TGI** — defaults to `http://127.0.0.1:3000/v1/chat/completions`.
+- **Custom OpenAI-Compatible** — accepts any Chat Completions endpoint, allowing MOME to connect to additional hosted providers, LAN servers and private inference gateways.
+
+Local providers do not require a key unless the server has authentication enabled. When the runtime exposes an OpenAI-compatible models route, **Discover Models** reads the live model list rather than relying on hard-coded model names.
 
 ## Project configuration
 
