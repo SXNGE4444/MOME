@@ -3,6 +3,7 @@ import Foundation
 enum AIProvider: String, CaseIterable, Identifiable {
     case openAI = "OpenAI"
     case deepSeek = "DeepSeek"
+    case experientialLabs = "Experiential Labs"
 
     var id: String { rawValue }
 
@@ -10,6 +11,7 @@ enum AIProvider: String, CaseIterable, Identifiable {
         switch self {
         case .openAI: return "openai.apiKey"
         case .deepSeek: return "deepseek.apiKey"
+        case .experientialLabs: return "experientiallabs.apiKey"
         }
     }
 
@@ -17,17 +19,32 @@ enum AIProvider: String, CaseIterable, Identifiable {
         switch self {
         case .openAI: return "gpt-5.6"
         case .deepSeek: return "deepseek-flash"
+        case .experientialLabs: return "gemini-3.7-flash"
         }
     }
 }
 
 struct AIService {
     func ask(_ prompt: String, provider: AIProvider, apiKey: String, model: String? = nil) async throws -> String {
+        let resolvedModel = model ?? provider.defaultModel
+
         switch provider {
         case .openAI:
-            return try await askOpenAI(prompt, apiKey: apiKey, model: model ?? provider.defaultModel)
+            return try await askOpenAI(prompt, apiKey: apiKey, model: resolvedModel)
         case .deepSeek:
-            return try await askDeepSeek(prompt, apiKey: apiKey, model: model ?? provider.defaultModel)
+            return try await askChatCompletions(
+                prompt,
+                apiKey: apiKey,
+                model: resolvedModel,
+                endpoint: "https://api.deepseek.com/chat/completions"
+            )
+        case .experientialLabs:
+            return try await askChatCompletions(
+                prompt,
+                apiKey: apiKey,
+                model: resolvedModel,
+                endpoint: "https://api.experientiallabs.ai/v1/chat/completions"
+            )
         }
     }
 
@@ -62,8 +79,17 @@ struct AIService {
         throw AIServiceError.unreadableResponse
     }
 
-    private func askDeepSeek(_ prompt: String, apiKey: String, model: String) async throws -> String {
-        var request = URLRequest(url: URL(string: "https://api.deepseek.com/chat/completions")!)
+    private func askChatCompletions(
+        _ prompt: String,
+        apiKey: String,
+        model: String,
+        endpoint: String
+    ) async throws -> String {
+        guard let url = URL(string: endpoint) else {
+            throw AIServiceError.invalidEndpoint(endpoint)
+        }
+
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -99,11 +125,13 @@ struct AIService {
 
 enum AIServiceError: LocalizedError {
     case requestFailed(String)
+    case invalidEndpoint(String)
     case unreadableResponse
 
     var errorDescription: String? {
         switch self {
         case .requestFailed(let message): return message
+        case .invalidEndpoint(let endpoint): return "Invalid AI provider endpoint: \(endpoint)"
         case .unreadableResponse: return "The AI provider returned a response MOME could not parse."
         }
     }
