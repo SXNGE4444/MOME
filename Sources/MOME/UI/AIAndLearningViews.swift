@@ -8,6 +8,11 @@ struct AIView: View {
     @State private var provider: AIProvider = .openAI
     @State private var projectID: UUID?
     @State private var apiKey = ""
+    @State private var endpoint = AIProvider.openAI.defaultEndpoint
+    @State private var modelName = AIProvider.openAI.defaultModel
+    @State private var availableModels: [String] = []
+    @State private var isDiscoveringModels = false
+    @State private var connectorMessage: String?
     @State private var prompt = ""
     @State private var response = ""
     @State private var isLoading = false
@@ -30,20 +35,88 @@ struct AIView: View {
                 Picker("Provider", selection: $provider) {
                     ForEach(AIProvider.allCases) { Text($0.rawValue).tag($0) }
                 }
-                .pickerStyle(.segmented).frame(width: 240)
+                .pickerStyle(.menu)
+                .frame(width: 230)
+            }
+
+            MOMECard("Model Connector") {
+                HStack(spacing: 10) {
+                    Text(provider.isLocalByDefault ? "LOCAL RUNTIME" : "CLOUD / REMOTE")
+                        .font(.caption2.monospaced().weight(.bold))
+                        .foregroundStyle(.secondary)
+                    Text(provider.detail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Reset Defaults") { resetProviderDefaults() }
+                }
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Endpoint").font(.caption.bold())
+                    TextField("OpenAI-compatible endpoint", text: $endpoint)
+                        .font(.caption.monospaced())
+                }
+
+                HStack(alignment: .bottom, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Model").font(.caption.bold())
+                        TextField("Model ID", text: $modelName)
+                            .font(.caption.monospaced())
+                    }
+
+                    if provider.supportsModelDiscovery {
+                        Button(isDiscoveringModels ? "Scanning…" : "Discover Models") {
+                            discoverModels()
+                        }
+                        .disabled(isDiscoveringModels)
+                    }
+
+                    Button("Save Connector") { saveConnector() }
+                }
+
+                if !availableModels.isEmpty {
+                    Picker("Available models", selection: $modelName) {
+                        ForEach(availableModels, id: \.self) { model in
+                            Text(model).tag(model)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+
+                if let connectorMessage {
+                    Text(connectorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
             }
 
             MOMECard("Secure API Credential") {
                 HStack {
-                    SecureField("API key stored in macOS Keychain", text: $apiKey)
-                    Button("Save to Keychain") {
+                    SecureField(
+                        provider.requiresAPIKey
+                            ? "API key required — stored in macOS Keychain"
+                            : "API key optional — useful for protected local/remote servers",
+                        text: $apiKey
+                    )
+                    Button("Save Key") {
                         do {
-                            try model.keychain.save(apiKey, account: provider.keychainAccount)
+                            if apiKey.isEmpty {
+                                model.keychain.delete(account: provider.keychainAccount)
+                            } else {
+                                try model.keychain.save(apiKey, account: provider.keychainAccount)
+                            }
                             errorMessage = nil
                         } catch {
                             errorMessage = error.localizedDescription
                         }
                     }
+                }
+
+                if !provider.requiresAPIKey {
+                    Text("MOME sends no Authorization header when this field is empty.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -80,12 +153,81 @@ struct AIView: View {
             .frame(maxHeight: .infinity)
         }
         .momePage()
-        .onAppear { loadKey() }
-        .onChange(of: provider) { _, _ in loadKey() }
+        .onAppear { loadProvider() }
+        .onChange(of: provider) { _, _ in loadProvider() }
     }
 
-    private func loadKey() {
+    private func loadProvider() {
         apiKey = model.keychain.read(account: provider.keychainAccount) ?? ""
+        endpoint = UserDefaults.standard.string(forKey: endpointStorageKey) ?? provider.defaultEndpoint
+        modelName = UserDefaults.standard.string(forKey: modelStorageKey) ?? provider.defaultModel
+        availableModels = []
+        connectorMessage = nil
+    }
+
+    private var endpointStorageKey: String {
+        "mome.ai.\(provider.storageID).endpoint"
+    }
+
+    private var modelStorageKey: String {
+        "mome.ai.\(provider.storageID).model"
+    }
+
+    private func saveConnector() {
+        UserDefaults.standard.set(endpoint, forKey: endpointStorageKey)
+        UserDefaults.standard.set(modelName, forKey: modelStorageKey)
+        do {
+            if apiKey.isEmpty {
+                model.keychain.delete(account: provider.keychainAccount)
+            } else {
+                try model.keychain.save(apiKey, account: provider.keychainAccount)
+            }
+            connectorMessage = "Saved \(provider.rawValue) connector."
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func resetProviderDefaults() {
+        UserDefaults.standard.removeObject(forKey: endpointStorageKey)
+        UserDefaults.standard.removeObject(forKey: modelStorageKey)
+        endpoint = provider.defaultEndpoint
+        modelName = provider.defaultModel
+        availableModels = []
+        connectorMessage = "Restored provider defaults."
+    }
+
+    private func discoverModels() {
+        let key = apiKey.isEmpty ? (model.keychain.read(account: provider.keychainAccount) ?? "") : apiKey
+        if provider.requiresAPIKey && key.isEmpty {
+            errorMessage = "Add an API key for \(provider.rawValue) before discovering models."
+            return
+        }
+
+        errorMessage = nil
+        connectorMessage = nil
+        isDiscoveringModels = true
+        let currentProvider = provider
+        let currentEndpoint = endpoint
+
+        Task {
+            do {
+                let discovered = try await model.ai.listModels(
+                    provider: currentProvider,
+                    apiKey: key,
+                    endpoint: currentEndpoint
+                )
+                availableModels = discovered
+                if modelName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   let first = discovered.first {
+                    modelName = first
+                }
+                connectorMessage = "Found \(discovered.count) model\(discovered.count == 1 ? "" : "s")."
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            isDiscoveringModels = false
+        }
     }
 
     private func insertLatestLog() {
@@ -106,17 +248,35 @@ struct AIView: View {
 
     private func ask() {
         let key = apiKey.isEmpty ? (model.keychain.read(account: provider.keychainAccount) ?? "") : apiKey
-        guard !key.isEmpty else {
+        if provider.requiresAPIKey && key.isEmpty {
             errorMessage = "Add an API key for \(provider.rawValue) first."
             return
         }
+
+        guard !modelName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorMessage = "Choose or enter a model first. For local runtimes, start the server and use Discover Models."
+            return
+        }
+
+        UserDefaults.standard.set(endpoint, forKey: endpointStorageKey)
+        UserDefaults.standard.set(modelName, forKey: modelStorageKey)
+
         errorMessage = nil
         isLoading = true
         let currentPrompt = prompt
         let currentProvider = provider
+        let currentModel = modelName
+        let currentEndpoint = endpoint
+
         Task {
             do {
-                response = try await model.ai.ask(currentPrompt, provider: currentProvider, apiKey: key)
+                response = try await model.ai.ask(
+                    currentPrompt,
+                    provider: currentProvider,
+                    apiKey: key,
+                    model: currentModel,
+                    endpoint: currentEndpoint
+                )
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -230,6 +390,7 @@ struct SetupAssistantView: View {
     @State private var step = 0
     @State private var openAIKey = ""
     @State private var deepSeekKey = ""
+    @State private var huggingFaceKey = ""
     @State private var ascKeyID = ""
     @State private var ascIssuerID = ""
     @State private var statusMessage: String?
@@ -303,6 +464,10 @@ struct SetupAssistantView: View {
                 Text("Secrets are stored in macOS Keychain, not forge.json or the project repository.").foregroundStyle(.secondary)
                 credentialField("OpenAI API key", text: $openAIKey, secure: true)
                 credentialField("DeepSeek API key", text: $deepSeekKey, secure: true)
+                credentialField("Hugging Face token", text: $huggingFaceKey, secure: true)
+                Text("LM Studio, Ollama, vLLM, llama.cpp, LocalAI, Jan, MLX-LM and local TGI can be connected later from Forge AI without a cloud API key.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 credentialField("App Store Connect Key ID", text: $ascKeyID, secure: false)
                 credentialField("App Store Connect Issuer ID", text: $ascIssuerID, secure: false)
                 HStack {
@@ -349,6 +514,7 @@ struct SetupAssistantView: View {
     private func loadCredentials() {
         openAIKey = model.keychain.read(account: "openai.apiKey") ?? ""
         deepSeekKey = model.keychain.read(account: "deepseek.apiKey") ?? ""
+        huggingFaceKey = model.keychain.read(account: "huggingface.apiKey") ?? ""
         ascKeyID = model.keychain.read(account: "appstore.keyID") ?? ""
         ascIssuerID = model.keychain.read(account: "appstore.issuerID") ?? ""
     }
@@ -357,6 +523,7 @@ struct SetupAssistantView: View {
         do {
             if !openAIKey.isEmpty { try model.keychain.save(openAIKey, account: "openai.apiKey") }
             if !deepSeekKey.isEmpty { try model.keychain.save(deepSeekKey, account: "deepseek.apiKey") }
+            if !huggingFaceKey.isEmpty { try model.keychain.save(huggingFaceKey, account: "huggingface.apiKey") }
             if !ascKeyID.isEmpty { try model.keychain.save(ascKeyID, account: "appstore.keyID") }
             if !ascIssuerID.isEmpty { try model.keychain.save(ascIssuerID, account: "appstore.issuerID") }
             statusMessage = "Saved to Keychain."
