@@ -11,3 +11,16 @@ Secrets.swift
 *.p12
 *.mobileprovision
 *.cer
+
+# Build and public-release outputs
+dist/
+*.dmg
+MOME-macOS-*.zip
+*.sha256
+
+# Never commit Apple signing material or local service credentials
+*.p8
+*.p12
+*.pem
+*.key
+.notary-credentials/
