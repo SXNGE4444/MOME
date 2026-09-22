@@ -11,3 +11,7 @@ Secrets.swift
 *.p12
 *.mobileprovision
 *.cer
+
+dist/
+*.dmg
+*.dmg.sha256
