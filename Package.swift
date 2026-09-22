@@ -15,6 +15,10 @@ let package = Package(
             linkerSettings: [
                 .linkedFramework("Security")
             ]
+        ),
+        .testTarget(
+            name: "MOMETests",
+            dependencies: ["MOME"]
         )
     ]
 )
