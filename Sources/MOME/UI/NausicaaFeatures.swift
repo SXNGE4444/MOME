@@ -482,8 +482,31 @@ struct RevenueIntelligenceView: View {
             VStack(alignment: .leading, spacing: 18) {
                 pageHeader("REVENUE INTELLIGENCE", "Local-first revenue tracking for product and business workspaces.")
                 HStack(spacing: 14) {
-                    MetricCard(value: String(format: "R %.0f", nausicaa.monthlyRevenue), label: "This Month", symbol: "chart.line.uptrend.xyaxis")
-                    MetricCard(value: "\(nausicaa.revenue.count)", label: "Entries", symbol: "list.bullet.rectangle")
+                    MOMECard {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(String(format: "R %.0f", nausicaa.monthlyRevenue))
+                                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                                Text("This Month").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chart.line.uptrend.xyaxis").font(.title2).foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    MOMECard {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("\(nausicaa.revenue.count)")
+                                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                                Text("Entries").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "list.bullet.rectangle").font(.title2).foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
                 MOMECard("Record revenue") {
                     TextField("Label", text: $label)
