@@ -32,9 +32,9 @@ struct AdapterRegistry {
             ToolAction(
                 title: name.capitalized,
                 command: command,
-                risk: .safe,
+                risk: .write,
                 symbol: "play.circle",
-                help: "Custom command declared by this project's forge.json."
+                help: "Custom command declared by this project's forge.json. Because project-defined commands can modify files or call external tools, MOME always requires explicit approval before running them."
             )
         }
         return actions
