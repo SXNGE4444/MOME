@@ -5,14 +5,17 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 APP_NAME="MOME"
-BUNDLE_ID="za.co.mome.devcenter"
+BUNDLE_ID="${MOME_BUNDLE_ID:-za.co.mome.devcenter}"
+VERSION="${MOME_VERSION:-0.1.0}"
+BUILD_NUMBER="${MOME_BUILD_NUMBER:-1}"
+SIGN_IDENTITY="${MOME_SIGN_IDENTITY:--}"
 DIST="$ROOT/dist"
 APP="$DIST/$APP_NAME.app"
 CONTENTS="$APP/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 
-echo "==> Building $APP_NAME (release)"
+echo "==> Building $APP_NAME $VERSION ($BUILD_NUMBER)"
 swift build -c release
 BIN_DIR="$(swift build -c release --show-bin-path)"
 
@@ -40,9 +43,9 @@ cat > "$CONTENTS/Info.plist" <<PLIST
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.1.0</string>
+    <string>$VERSION</string>
     <key>CFBundleVersion</key>
-    <string>1</string>
+    <string>$BUILD_NUMBER</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
@@ -53,8 +56,14 @@ cat > "$CONTENTS/Info.plist" <<PLIST
 </plist>
 PLIST
 
-# Local development signature. Production distribution will use a Developer ID certificate.
-codesign --force --deep --sign - "$APP"
+if [[ "$SIGN_IDENTITY" == "-" ]]; then
+  echo "==> Ad-hoc signing for local development"
+  codesign --force --sign - "$APP"
+else
+  echo "==> Developer ID signing with hardened runtime"
+  codesign --force --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP"
+  codesign --verify --deep --strict --verbose=2 "$APP"
+fi
 
 echo "==> Built $APP"
 echo "Open with: open '$APP'"

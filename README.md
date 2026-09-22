@@ -4,6 +4,12 @@
 
 MOME is a native macOS control plane for planning, building, testing, running and shipping software from one dashboard. It orchestrates real local CLIs, applications, simulators, emulators, cloud tools and AI providers rather than replacing them.
 
+## Public beta status
+
+MOME is preparing for its first public open-source developer preview. The source is licensed under Apache-2.0. Public macOS binaries are intended to be Developer ID signed, hardened-runtime enabled and notarized before release.
+
+MOME executes developer tooling on your Mac. READ and SAFE actions may run directly; WRITE, RELEASE and DANGEROUS actions require approval. Project-defined commands from `forge.json` are treated as WRITE actions and always require explicit approval.
+
 ## Current operational surface
 
 - Native SwiftUI macOS application
@@ -33,6 +39,13 @@ MOME is a native macOS control plane for planning, building, testing, running an
 - macOS Keychain credential vault
 - Guided first-run setup and MOME Academy walkthroughs
 - READ / SAFE / WRITE / RELEASE / DANGEROUS action gates
+- Native Workspaces and unified activity Inbox
+- Local Automation Hub with explicit trigger → action records
+- Reusable AI Agent profiles connected to Forge AI workflows
+- Business-service connector catalog for messaging, email, CRM, payments and analytics
+- Local-first Revenue Intelligence
+- Community Roadmap proposals and voting
+- Apache-2.0 open-source licensing, security policy and contributor workflow
 
 ## Build and run
 
@@ -124,3 +137,24 @@ MOME does not allow AI responses to bypass these action gates.
 ## Important limitation
 
 MOME can only execute integrations that are correctly installed, authenticated and configured on the Mac. A green MOME control does not manufacture missing Apple signing identities, App Store Connect access, Google Play service accounts, engine licenses, cloud permissions or project-specific build scripts. Failed commands stream their real output into Terminal and can be passed directly to Forge AI for diagnosis.
+
+
+## Public releases
+
+Release engineering is documented in `docs/RELEASING.md`. Tagged releases use `.github/workflows/release.yml` to build, Developer ID sign, package, notarize and publish the macOS DMG.
+
+The release workflow requires Apple Developer and notarization credentials stored as GitHub Actions secrets. No signing certificate, password or API credential belongs in source control.
+
+## Nausicaa migration
+
+MOME now includes native implementations of the major Nausicaa product surfaces: Workspaces, Unified Inbox, Automation Hub, Agent profiles, service integrations, Revenue Intelligence and Community Roadmap.
+
+The migration intentionally does not fake external SaaS connectivity. Service connectors such as Gmail, Slack, WhatsApp Business, HubSpot, Salesforce, Stripe, Paystack and Flutterwave expose catalog/configuration state until a real provider-specific OAuth or API adapter is installed. Local state remains usable without those credentials.
+
+## Contributing and security
+
+Read `CONTRIBUTING.md` before opening a pull request. Report security-sensitive issues using the process in `SECURITY.md` rather than publishing exploit details in a normal issue.
+
+## License
+
+Apache License 2.0. See `LICENSE`.

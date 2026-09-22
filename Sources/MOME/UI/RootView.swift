@@ -12,6 +12,13 @@ struct RootView: View {
                 switch model.section {
                 case .dashboard: DashboardView()
                 case .projects: ProjectsView()
+                case .workspaces: WorkspacesView()
+                case .inbox: UnifiedInboxView()
+                case .automations: AutomationsHubView()
+                case .agents: AgentsHubView()
+                case .services: ServiceIntegrationsView()
+                case .revenue: RevenueIntelligenceView()
+                case .roadmap: CommunityRoadmapView()
                 case .plan: PlanView()
                 case .terminal: TerminalView()
                 case .devices: DevicesView()

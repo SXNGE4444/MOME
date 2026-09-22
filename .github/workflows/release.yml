@@ -1,0 +1,70 @@
+name: Public macOS Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        shell: bash
+        run: |
+          echo "MOME_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+          echo "MOME_BUILD_NUMBER=${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
+      - name: Import Developer ID certificate
+        env:
+          CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
+        run: |
+          test -n "$CERT_P12_BASE64"
+          test -n "$CERT_PASSWORD"
+          test -n "$KEYCHAIN_PASSWORD"
+          echo "$CERT_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/developer-id.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$RUNNER_TEMP/mome-build.keychain-db"
+          security set-keychain-settings -lut 21600 "$RUNNER_TEMP/mome-build.keychain-db"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$RUNNER_TEMP/mome-build.keychain-db"
+          security import "$RUNNER_TEMP/developer-id.p12" -k "$RUNNER_TEMP/mome-build.keychain-db" -P "$CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$RUNNER_TEMP/mome-build.keychain-db"
+          security list-keychains -d user -s "$RUNNER_TEMP/mome-build.keychain-db"
+
+      - name: Build and sign MOME
+        env:
+          MOME_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+        run: |
+          swift test
+          bash scripts/build-app.sh
+          spctl --assess --type execute --verbose=4 dist/MOME.app || true
+
+      - name: Create signed DMG
+        env:
+          MOME_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+        run: bash scripts/create-dmg.sh
+
+      - name: Notarize and staple
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: bash scripts/notarize.sh "dist/MOME-${MOME_VERSION}.dmg"
+
+      - name: Verify notarized app
+        run: |
+          xcrun stapler validate "dist/MOME-${MOME_VERSION}.dmg"
+          shasum -a 256 "dist/MOME-${MOME_VERSION}.dmg" > "dist/MOME-${MOME_VERSION}.dmg.sha256"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME"             "dist/MOME-${MOME_VERSION}.dmg"             "dist/MOME-${MOME_VERSION}.dmg.sha256"             --title "MOME $GITHUB_REF_NAME"             --generate-notes             --prerelease

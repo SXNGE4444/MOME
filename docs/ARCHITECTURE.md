@@ -78,3 +78,14 @@ The MVP uses `Process` with streamed stdout/stderr through pipes. A PTY-backed t
 ## Distribution direction
 
 The intended production path is direct macOS distribution with Developer ID signing, Hardened Runtime and Apple notarization. MOME needs broad local process/tool access that is intentionally more capable than a typical Mac App Store sandboxed utility.
+
+
+## Nausicaa-derived local feature layer
+
+`NausicaaStore` is a native, local-first persistence layer for the product capabilities migrated from Nausicaa. It stores workspaces, unified inbox entries, automation definitions, agent profiles, service-connector metadata, revenue entries and roadmap proposals under MOME's Application Support directory.
+
+This layer is intentionally separate from command execution. It cannot bypass `CommandRisk` approval gates. External service connectors represent configuration and connection state only until a concrete provider adapter performs real authentication and requests.
+
+## Distribution trust boundary
+
+Local development builds may use ad-hoc signing. Public binaries must use Developer ID Application signing with hardened runtime and Apple notarization. Release credentials are supplied only through the CI environment and are never committed to the repository.

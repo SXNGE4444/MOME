@@ -19,6 +19,9 @@ jobs:
       - name: Build MOME debug
         run: swift build -c debug
 
+      - name: Run tests
+        run: swift test
+
       - name: Build MOME.app
         run: bash scripts/build-app.sh
 

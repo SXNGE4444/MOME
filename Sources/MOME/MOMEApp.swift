@@ -11,6 +11,7 @@ struct MOMEApp: App {
                 .environmentObject(model)
                 .environmentObject(model.workspace)
                 .environmentObject(model.processes)
+                .environmentObject(model.nausicaa)
                 .frame(minWidth: 1120, minHeight: 720)
                 .task {
                     await model.initialise()
@@ -69,6 +70,7 @@ final class AppModel: ObservableObject {
 
     let workspace = WorkspaceStore()
     let processes = ProcessSupervisor()
+    let nausicaa = NausicaaStore()
     let keychain = KeychainVault(service: "za.co.mome.devcenter")
     let ai = AIService()
 
