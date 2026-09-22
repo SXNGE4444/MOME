@@ -32,9 +32,9 @@ struct AdapterRegistry {
             ToolAction(
                 title: name.capitalized,
                 command: command,
-                risk: .safe,
+                risk: .write,
                 symbol: "play.circle",
-                help: "Custom command declared by this project's forge.json."
+                help: "This arbitrary command comes from the project's forge.json and requires your approval each time. Inspect the command and trust the project before running it."
             )
         }
         return actions
