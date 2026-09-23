@@ -52,6 +52,12 @@ struct MOMEApp: App {
                     model.isGuidePresented = true
                 }
                 .keyboardShortcut("?", modifiers: [.command])
+
+                Divider()
+
+                Button("Check for Updates…") {
+                    Task { await model.checkForUpdates() }
+                }
             }
         }
     }
@@ -67,6 +73,7 @@ final class AppModel: ObservableObject {
     @Published var isSetupPresented = false
     @Published var isGuidePresented = false
     @Published var pendingApproval: PendingAction?
+    @Published var updateNotice: UpdateNotice?
 
     let workspace = WorkspaceStore()
     let processes = ProcessSupervisor()
@@ -75,6 +82,10 @@ final class AppModel: ObservableObject {
     let ai = AIService()
 
     private let setupKey = "mome.setup.completed.v2"
+
+    var displayVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "development"
+    }
 
     func initialise() async {
         await refreshEnvironment()
@@ -132,6 +143,18 @@ final class AppModel: ObservableObject {
             environment: environment
         )
         section = .terminal
+    }
+
+    func checkForUpdates() async {
+        do {
+            updateNotice = try await ReleaseUpdateChecker.check(currentVersion: displayVersion)
+        } catch {
+            updateNotice = UpdateNotice(
+                title: "Update Check Failed",
+                message: error.localizedDescription,
+                releaseURL: URL(string: "https://github.com/SXNGE4444/MOME/releases")
+            )
+        }
     }
 
     func runDeviceAction(_ action: ToolAction, project: MOMEProject?) {
