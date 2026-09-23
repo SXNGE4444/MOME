@@ -1,5 +1,9 @@
 # MOME
 
+[![macOS CI](https://github.com/SXNGE4444/MOME/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/SXNGE4444/MOME/actions/workflows/macos-ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black.svg)](https://www.apple.com/macos/)
+
 **MOME — Developer Command Center for macOS**
 
 MOME is a native macOS control plane for planning, building, testing, running and shipping software from one dashboard. It orchestrates real local CLIs, applications, simulators, emulators, cloud tools and AI providers rather than replacing them.
@@ -46,6 +50,14 @@ MOME executes developer tooling on your Mac. READ and SAFE actions may run direc
 - Local-first Revenue Intelligence
 - Community Roadmap proposals and voting
 - Apache-2.0 open-source licensing, security policy and contributor workflow
+
+## Install
+
+### Public release
+
+Official beta releases are distributed as signed and notarized DMG files through GitHub Releases. Download only from the repository's Releases page and verify the published SHA-256 checksum.
+
+### Build from source
 
 ## Build and run
 
@@ -150,6 +162,10 @@ The release workflow requires Apple Developer and notarization credentials store
 MOME now includes native implementations of the major Nausicaa product surfaces: Workspaces, Unified Inbox, Automation Hub, Agent profiles, service integrations, Revenue Intelligence and Community Roadmap.
 
 The migration intentionally does not fake external SaaS connectivity. Service connectors such as Gmail, Slack, WhatsApp Business, HubSpot, Salesforce, Stripe, Paystack and Flutterwave expose catalog/configuration state until a real provider-specific OAuth or API adapter is installed. Local state remains usable without those credentials.
+
+See `docs/FEATURE_STATUS.md` for the exact operational status of each feature and `docs/LAUNCH_CHECKLIST.md` for the public beta drop checklist.
+
+MOME does not include product telemetry in this beta.
 
 ## Contributing and security
 
