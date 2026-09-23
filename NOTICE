@@ -1,0 +1,8 @@
+MOME
+Copyright 2026 MOME contributors
+
+MOME is licensed under the Apache License, Version 2.0.
+
+Nausicaa-inspired feature concepts were reimplemented natively in MOME rather
+than copied as a web runtime. See repository history and documentation for
+project provenance and contribution details.

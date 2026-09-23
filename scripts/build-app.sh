@@ -6,7 +6,7 @@ cd "$ROOT"
 
 APP_NAME="MOME"
 BUNDLE_ID="${MOME_BUNDLE_ID:-za.co.mome.devcenter}"
-VERSION="${MOME_VERSION:-0.1.0}"
+VERSION="${MOME_VERSION:-$(tr -d '[:space:]' < "$ROOT/VERSION")}"
 BUILD_NUMBER="${MOME_BUILD_NUMBER:-1}"
 SIGN_IDENTITY="${MOME_SIGN_IDENTITY:--}"
 DIST="$ROOT/dist"
@@ -22,6 +22,10 @@ BIN_DIR="$(swift build -c release --show-bin-path)"
 rm -rf "$APP"
 mkdir -p "$MACOS" "$RESOURCES"
 cp "$BIN_DIR/$APP_NAME" "$MACOS/$APP_NAME"
+
+echo "==> Generating application icon"
+swift scripts/generate-icon.swift
+cp "$DIST/MOME.icns" "$RESOURCES/MOME.icns"
 
 cat > "$CONTENTS/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -42,6 +46,8 @@ cat > "$CONTENTS/Info.plist" <<PLIST
     <string>$APP_NAME</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>MOME.icns</string>
     <key>CFBundleShortVersionString</key>
     <string>$VERSION</string>
     <key>CFBundleVersion</key>
