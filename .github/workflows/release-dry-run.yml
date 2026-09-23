@@ -1,0 +1,35 @@
+name: macOS Release Dry Run
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - ".github/workflows/release.yml"
+      - ".github/workflows/release-dry-run.yml"
+      - "VERSION"
+
+jobs:
+  dry-run:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preflight
+        run: bash scripts/preflight.sh
+
+      - name: Create unsigned distribution DMG
+        run: |
+          export MOME_VERSION="$(tr -d '[:space:]' < VERSION)"
+          bash scripts/create-dmg.sh
+          test -f "dist/MOME-${MOME_VERSION}.dmg"
+          shasum -a 256 "dist/MOME-${MOME_VERSION}.dmg"
+
+      - name: Upload dry-run DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOME-release-dry-run
+          path: dist/MOME-*.dmg
+          if-no-files-found: error
