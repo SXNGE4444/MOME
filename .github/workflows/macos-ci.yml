@@ -16,16 +16,10 @@ jobs:
       - name: Swift version
         run: swift --version
 
-      - name: Build MOME debug
-        run: swift build -c debug
+      - name: Release preflight
+        run: bash scripts/preflight.sh
 
-      - name: Run tests
-        run: swift test
-
-      - name: Build MOME.app
-        run: bash scripts/build-app.sh
-
-      - name: Package app
+      - name: Package CI artifact
         run: ditto -c -k --sequesterRsrc --keepParent dist/MOME.app MOME-macOS-arm64.zip
 
       - name: Upload MOME app artifact
