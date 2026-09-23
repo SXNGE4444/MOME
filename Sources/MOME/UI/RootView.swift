@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct RootView: View {
     @EnvironmentObject private var model: AppModel
@@ -44,6 +45,19 @@ struct RootView: View {
                 },
                 secondaryButton: .cancel()
             )
+        }
+        .alert(item: $model.updateNotice) { notice in
+            if let url = notice.releaseURL {
+                return Alert(
+                    title: Text(notice.title),
+                    message: Text(notice.message),
+                    primaryButton: .default(Text("Open Releases")) {
+                        NSWorkspace.shared.open(url)
+                    },
+                    secondaryButton: .cancel(Text("Close"))
+                )
+            }
+            return Alert(title: Text(notice.title), message: Text(notice.message))
         }
     }
 
@@ -102,6 +116,9 @@ private struct SidebarView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
+                    Text(model.displayVersion == "development" ? "dev" : "v\(model.displayVersion)")
+                        .font(.caption2.monospaced())
+                        .foregroundStyle(.tertiary)
                 }
             }
             .padding(16)
