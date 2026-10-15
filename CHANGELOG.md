@@ -5,6 +5,8 @@ All notable changes to MOME are documented here.
 ## [Unreleased]
 
 ### Added
+- Public-facing static MOME product website with accessible interactive dashboard concept and GitHub Pages workflow.
+- Source protection guidance, contributor policy, trademark guidelines, and website validation.
 - Apache-2.0 open-source license.
 - Security policy and contribution guide.
 - Native Nausicaa feature migration:

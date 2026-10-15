@@ -15,3 +15,28 @@ Secrets.swift
 dist/
 *.dmg
 *.dmg.sha256
+
+# Local tooling, development state and generated assets
+node_modules/
+.vercel/
+.wrangler/
+.expo/
+coverage/
+.next/
+*.log
+
+# Signing and deployment credentials (never commit)
+*.p8
+*.pem
+*.pfx
+*.p12
+*.keystore
+*.jks
+*.key
+service-account*.json
+*-service-account.json
+google-play-credentials*.json
+AuthKey_*.p8
+credentials.local.*
+secrets/
+private/
