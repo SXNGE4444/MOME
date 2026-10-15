@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0c11">
+  <meta name="description" content="MOME is a native macOS developer command center. Bring projects, terminals, AI, simulators, creative engines and release workflows into one workspace.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MOME — One workspace. Every tool.">
+  <meta property="og:description" content="The native macOS command center for people who build. Open-source developer preview in progress.">
+  <title>MOME — Developer Command Center for macOS</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <header class="topbar" id="top">
+    <nav class="nav shell" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="MOME home">
+        <span class="brand-icon" aria-hidden="true">M<span class="brand-spark"></span></span>
+        <span class="brand-name">MOME<span class="brand-period">.</span></span>
+        <span class="brand-tag">FOR MACOS</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#product">The workspace</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#opensource">Open source</a>
+        <a href="#about">About</a>
+        <a class="nav-github" href="https://github.com/SXNGE4444/MOME" target="_blank" rel="noopener noreferrer">Explore GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-eyebrow"><span class="live-pulse" aria-hidden="true"></span> THE DEVELOPER WORKSPACE, REIMAGINED <span class="eyebrow-rule"></span> 01 / INTRO</div>
+      <div class="hero-copy">
+        <h1 id="hero-title">Less switching.<br><span>More shipping.</span></h1>
+        <p class="hero-description">Your projects, terminals, AI models, simulators and release workflows deserve to work together. Meet <strong>MOME</strong>, a native macOS command center built to keep your creative momentum moving.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#product">Explore the workspace <span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="https://github.com/SXNGE4444/MOME" target="_blank" rel="noopener noreferrer"><span class="github-mark" aria-hidden="true">⌘</span> View the source</a>
+        </div>
+      </div>
+      <div class="hero-meta"><span>SWIFTUI / LOCAL-FIRST / HUMAN-IN-CONTROL</span><span>MACOS 14+ <span class="asterisk" aria-hidden="true">✳</span> PUBLIC PREVIEW IN PREPARATION</span></div>
+    </section>
+
+    <section class="product-section" id="product" aria-labelledby="product-title">
+      <div class="shell">
+        <div class="section-heading product-heading">
+          <div>
+            <p class="kicker">02 / THE PRODUCT</p>
+            <h2 id="product-title">One interface.<br><em>Real work underneath.</em></h2>
+          </div>
+          <p>MOME orchestrates developer tools you already use. It doesn't pretend to replace Xcode, Git, your terminal or your creative engines.</p>
+        </div>
+
+        <div class="preview-wrap">
+          <div class="preview-label"><span class="four-dot" aria-hidden="true">✳</span> INTERACTIVE PRODUCT CONCEPT <span class="preview-label-end">ILLUSTRATIVE DATA · NOT A LIVE APP SESSION</span></div>
+          <div class="mac-frame">
+            <div class="mac-toolbar">
+              <div class="traffic-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="mac-title"><span class="tiny-m">M</span> MOME / DEVELOPER COMMAND CENTER</div>
+              <span class="toolbar-indicator"><span class="toolbar-dot"></span> PREVIEW</span>
+            </div>
+            <div class="application">
+              <aside class="app-sidebar" aria-label="Dashboard concept sections">
+                <div class="app-logo"><span class="mini-logo">M</span><div><strong>MOME</strong><small>DEVELOPER OS</small></div></div>
+                <p class="sidebar-caption">WORKSPACE</p>
+                <div class="mock-nav" role="tablist" aria-label="Preview dashboard pages">
+                  <button role="tab" type="button" id="tab-command" aria-selected="true" tabindex="0" aria-controls="panel-command" data-panel="command"><span aria-hidden="true">▦</span> Command center</button>
+                  <button role="tab" type="button" id="tab-ai" aria-selected="false" tabindex="-1" aria-controls="panel-ai" data-panel="ai"><span aria-hidden="true">✳</span> Forge AI</button>
+                  <button role="tab" type="button" id="tab-release" aria-selected="false" tabindex="-1" aria-controls="panel-release" data-panel="release"><span aria-hidden="true">⬡</span> Release controls</button>
+                </div>
+                <p class="sidebar-caption sidebar-caption-lower">TOOLCHAIN</p>
+                <div class="mock-list"><span>⌘ &nbsp; Terminal</span><span>◈ &nbsp; Devices</span><span>☷ &nbsp; Automations</span><span>⟡ &nbsp; Workspaces</span></div>
+                <div class="sidebar-bottom"><span class="avatar">M</span><div>Local workspace<small>Demo environment</small></div><span class="ellipses">···</span></div>
+              </aside>
+
+              <div class="app-main">
+                <section class="dashboard-panel active" id="panel-command" role="tabpanel" aria-labelledby="tab-command">
+                  <div class="dashboard-intro">
+                    <div><span class="micro-label">COMMAND CENTER <span class="chevron">/</span> OVERVIEW</span><h3>Build. Test. <i>Ship.</i></h3><p>Your development environment, in one clear view.</p></div>
+                    <span class="mock-action">＋ New project</span>
+                  </div>
+                  <div class="metric-grid">
+                    <div class="metric"><span>PROJECTS</span><strong>04</strong><small>Sample workspace</small></div>
+                    <div class="metric"><span>TOOLS READY</span><strong>12</strong><small><b class="green-dot"></b> Sample state</small></div>
+                    <div class="metric"><span>ACTIVE SESSIONS</span><strong>03</strong><small>Illustrative activity</small></div>
+                    <div class="metric"><span>DEVICES</span><strong>02</strong><small>Sample connections</small></div>
+                  </div>
+                  <div class="workspace-grid">
+                    <div class="panel-card projects-card">
+                      <div class="panel-title"><span>RECENT PROJECTS</span><span>VIEW ALL ↗</span></div>
+                      <div class="project-line"><span class="project-glyph p-purple">A</span><div><strong>Atlas Mobile</strong><small>React Native · Expo · EAS</small></div><span class="project-state"><b class="green-dot"></b> Ready</span></div>
+                      <div class="project-line"><span class="project-glyph p-peach">F</span><div><strong>Form Studio</strong><small>SwiftUI · Xcode</small></div><span class="project-state">Local</span></div>
+                      <div class="project-line"><span class="project-glyph p-blue">W</span><div><strong>Wave Engine</strong><small>Blender · Python</small></div><span class="project-state">Local</span></div>
+                    </div>
+                    <div class="panel-card activity-card">
+                      <div class="panel-title"><span>LIVE ACTIVITY</span><span class="activity-pip"></span></div>
+                      <div class="terminal">
+                        <div class="terminal-line"><span class="terminal-prompt">~</span> swift build</div>
+                        <div class="terminal-line terminal-muted">Compiling MOME workspace...</div>
+                        <div class="terminal-line terminal-success">✓ Sample build complete</div>
+                        <div class="terminal-line"><span class="terminal-prompt">~</span> git status</div>
+                        <div class="terminal-line terminal-muted">On branch main</div>
+                        <div class="terminal-cursor"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dashboard-foot"><span>EXAMPLE INTERFACE · CONNECT YOUR REAL LOCAL TOOLS IN THE MACOS APP</span><span>001 — MOME</span></div>
+                </section>
+
+                <section class="dashboard-panel" id="panel-ai" role="tabpanel" aria-labelledby="tab-ai" hidden>
+                  <div class="dashboard-intro"><div><span class="micro-label">FORGE AI <span class="chevron">/</span> MODEL CONNECTORS</span><h3>AI with <i>context.</i></h3><p>Reason over real project, build and environment information.</p></div><span class="mock-action">✳ Forge AI</span></div>
+                  <div class="ai-overview">
+                    <div class="panel-card ai-prompt"><div class="panel-title"><span>EXAMPLE PROMPT</span><span>01</span></div><p>“Why did my last iOS build fail, and what should I fix first?”</p><div class="prompt-tags"><span>BUILD LOG</span><span>PROJECT SNAPSHOT</span></div></div>
+                    <div class="panel-card ai-response"><div class="panel-title"><span>FORGE AI · ILLUSTRATIVE RESPONSE</span><span>✳</span></div><p><strong>Start with the signing configuration.</strong> The sample build log points to an unavailable provisioning profile.</p><div class="response-step">01 <span>Inspect Xcode signing settings</span></div><div class="response-step">02 <span>Confirm team and bundle ID</span></div><div class="approval-notice">🔒 WRITE / RELEASE COMMANDS REQUIRE HUMAN APPROVAL</div></div>
+                  </div>
+                  <div class="dashboard-foot"><span>MODEL CONNECTORS INCLUDE CLOUD AND LOCAL OPEN-WEIGHT OPTIONS</span><span>002 — FORGE AI</span></div>
+                </section>
+
+                <section class="dashboard-panel" id="panel-release" role="tabpanel" aria-labelledby="tab-release" hidden>
+                  <div class="dashboard-intro"><div><span class="micro-label">RELEASE CONTROLS <span class="chevron">/</span> HUMAN APPROVAL</span><h3>Ship with <i>intent.</i></h3><p>Review consequential actions before execution.</p></div><span class="mock-action">RELEASE GATES</span></div>
+                  <div class="release-grid">
+                    <div class="panel-card release-path"><div class="panel-title"><span>EXAMPLE RELEASE PATH</span><span>MACOS / MOBILE</span></div><div class="release-step"><span class="step-num">01</span><div><strong>Build and test</strong><small>Read / safe operations</small></div><span class="step-check">✓</span></div><div class="release-step"><span class="step-num">02</span><div><strong>Review output</strong><small>Logs, diagnostics, project state</small></div><span class="step-check">✓</span></div><div class="release-step"><span class="step-num">03</span><div><strong>Approve release</strong><small>Explicit human authorization</small></div><span class="approval-tag">REVIEW</span></div></div>
+                    <div class="panel-card risk-panel"><div class="panel-title"><span>ACTION CLASSIFICATION</span><span>GUARDED</span></div><div class="risk-line"><span class="risk-square risk-read"></span> READ <small>Inspect state</small></div><div class="risk-line"><span class="risk-square risk-safe"></span> SAFE <small>Local dev / tests</small></div><div class="risk-line"><span class="risk-square risk-write"></span> WRITE <small>Approval required</small></div><div class="risk-line"><span class="risk-square risk-release"></span> RELEASE <small>Approval required</small></div><div class="risk-line"><span class="risk-square risk-danger"></span> DANGEROUS <small>Approval required</small></div></div>
+                  </div>
+                  <div class="dashboard-foot"><span>NO AI BYPASS OF APPROVAL GATES</span><span>003 — RELEASE</span></div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="preview-caption"><span>THE CONTROL PLANE, NOT ANOTHER STACK TO MANAGE.</span><span>EXPLORE THE THREE INTERFACE VIEWS ABOVE <span aria-hidden="true">↗</span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement"><div class="shell"><p>DESIGNED FOR THE ENTIRE BUILD CYCLE</p><h2>From the first line<br>to the final <span>release.</span></h2><div class="statement-number">03 — BUILDER'S FLOW <span>↘</span></div></div></section>
+
+    <section class="capabilities shell" id="capabilities" aria-labelledby="capabilities-title">
+      <div class="section-heading"><div><p class="kicker">04 / EVERYTHING IN REACH</p><h2 id="capabilities-title">The tools don't change.<br><em>The workflow does.</em></h2></div><p>MOME brings the real command paths into a single native macOS surface, with logs and approval gates you can inspect.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card feature-wide"><span class="feature-index">01 / DEVELOPMENT</span><div class="feature-icon">⌘</div><h3>Build for every platform.</h3><p>Run stack-relevant workflows for Xcode, iOS Simulator, Android Studio, Expo and EAS, without losing context between tools.</p><div class="feature-tags"><span>XCODE</span><span>ANDROID</span><span>EXPO / EAS</span><span>TESTFLIGHT</span></div></article>
+        <article class="feature-card"><span class="feature-index">02 / INTELLIGENCE</span><div class="feature-icon">✳</div><h3>Your models. Your choice.</h3><p>Work with OpenAI, DeepSeek, Hugging Face and local inference runtimes through Forge AI.</p><div class="feature-tags"><span>OLLAMA</span><span>LM STUDIO</span><span>LOCAL-FIRST</span></div></article>
+        <article class="feature-card"><span class="feature-index">03 / CREATIVE SYSTEMS</span><div class="feature-icon">◈</div><h3>Creative engines, connected.</h3><p>Bring Blender renders, Unity batch tasks and Unreal packaging into your project flow.</p><div class="feature-tags"><span>BLENDER</span><span>UNITY</span><span>UNREAL</span></div></article>
+        <article class="feature-card"><span class="feature-index">04 / CLOUD & RELEASE</span><div class="feature-icon">↗</div><h3>One clear path to shipping.</h3><p>Orchestrate GitHub, Supabase, Cloudflare and Vercel command paths. Production-affecting actions are reviewed.</p><div class="feature-tags"><span>GITHUB</span><span>SUPABASE</span><span>CLOUDFLARE</span><span>VERCEL</span></div></article>
+        <article class="feature-card feature-wide"><span class="feature-index">05 / LOCAL OPERATIONS</span><div class="feature-icon">⟡</div><h3>Organize the work around the work.</h3><p>Registered projects, persistent terminals, workspaces, an activity inbox, local automations, AI agent profiles and a growing product roadmap — in one operating environment.</p><div class="feature-tags"><span>WORKSPACES</span><span>TERMINAL</span><span>AGENTS</span><span>AUTOMATIONS</span></div></article>
+      </div>
+    </section>
+
+    <section class="principle-section"><div class="shell principle-layout"><div><p class="kicker">05 / A MORE RESPONSIBLE CONTROL PLANE</p><h2>Powerful tools.<br><em>Human decisions.</em></h2><p class="principle-lead">Automation should save time, not silently take control of your workstation. MOME separates inspection and safe local operations from changes, releases and destructive actions.</p><a href="https://github.com/SXNGE4444/MOME/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer" class="text-link">Read the security policy <span aria-hidden="true">↗</span></a></div><div class="principle-matrix"><div><span class="matrix-chip chip-blue">READ / SAFE</span><strong>Inspect and test</strong><small>Eligible actions may run directly</small></div><div><span class="matrix-chip chip-purple">WRITE</span><strong>Change local state</strong><small>Human approval required</small></div><div><span class="matrix-chip chip-orange">RELEASE</span><strong>Publish or deploy</strong><small>Human approval required</small></div><div><span class="matrix-chip chip-red">DANGEROUS</span><strong>Destructive operations</strong><small>Human approval required</small></div></div></div></section>
+
+    <section class="opensource shell" id="opensource" aria-labelledby="opensource-title">
+      <div class="open-source-head"><p class="kicker">06 / BUILT IN THE OPEN</p><span>APACHE-2.0 LICENSE</span></div>
+      <div class="open-source-layout"><div><h2 id="opensource-title">Open code.<br><em>Open collaboration.</em></h2><p>MOME is a community-facing project developed in the open. Explore the source, report issues, propose features or contribute changes through reviewed pull requests.</p><div class="open-actions"><a class="button button-primary" href="https://github.com/SXNGE4444/MOME" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a><a class="button button-secondary button-outline" href="https://github.com/SXNGE4444/MOME/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">How to contribute <span aria-hidden="true">↗</span></a></div></div><div class="code-window"><div class="code-window-head"><span>TERMINAL</span><span>01 — GET STARTED</span></div><div class="code-line"><span>$</span> git clone https://github.com/SXNGE4444/MOME.git</div><div class="code-line"><span>$</span> cd MOME</div><div class="code-line"><span>$</span> swift build</div><div class="code-line"><span>$</span> swift run MOME</div><button class="copy-command" type="button" data-copy="git clone https://github.com/SXNGE4444/MOME.git&#10;cd MOME&#10;swift build&#10;swift run MOME">Copy commands <span aria-hidden="true">⧉</span></button><div class="code-footnote">BUILD FROM SOURCE · MACOS 14+ · XCODE TOOLCHAIN REQUIRED</div></div></div>
+    </section>
+
+    <section class="availability"><div class="shell availability-layout"><div><p class="kicker">07 / EARLY PREVIEW</p><h2>Made for the people<br>who <em>make things.</em></h2><p>Our first public developer preview is being prepared. Follow the repository for releases, progress and opportunities to contribute. No public binary is promised until signing and notarization checks pass.</p></div><div class="availability-cta"><span class="release-status"><b class="live-pulse"></b> PUBLIC PREVIEW IN PREPARATION</span><a class="button button-light" href="https://github.com/SXNGE4444/MOME/releases" target="_blank" rel="noopener noreferrer">Check release status <span aria-hidden="true">↗</span></a><a class="watch-link" href="https://github.com/SXNGE4444/MOME" target="_blank" rel="noopener noreferrer">Watch development on GitHub ↗</a></div></div></section>
+  </main>
+
+  <footer id="about"><div class="shell footer-main"><div><a class="footer-brand" href="#top">MOME<span>.</span></a><p>The workspace for building what comes next.</p><div class="footer-origin"><a href="https://lastdicesptyltd.co.za" target="_blank" rel="noopener noreferrer">A LAST DICES PROJECT ↗</a><span>DESIGN & ENGINEERING BY <a href="https://blancostudio.co.za" target="_blank" rel="noopener noreferrer">BLANCO STUDIO ↗</a></span></div></div><div class="footer-links"><div><strong>EXPLORE</strong><a href="#product">The workspace</a><a href="#capabilities">Capabilities</a><a href="#opensource">Open source</a></div><div><strong>PROJECT</strong><a href="https://github.com/SXNGE4444/MOME" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://github.com/SXNGE4444/MOME/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a><a href="https://github.com/SXNGE4444/MOME/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security ↗</a></div></div></div><div class="shell footer-bottom"><span>© <span id="year">2026</span> MOME CONTRIBUTORS. APACHE-2.0 SOURCE LICENSE. BRAND RIGHTS RESERVED.</span><span>INDEPENDENT SOFTWARE. BUILT WITH INTENT.</span><a href="#top">BACK TO TOP ↑</a></div></footer>
+</body>
+</html>

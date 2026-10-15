@@ -32,13 +32,27 @@ Target version: **v0.1.0-beta.1**
 
 These actions cannot be represented by source code alone.
 
-- [ ] Change GitHub repository visibility from **Private** to **Public**
+- [x] Change GitHub repository visibility from **Private** to **Public**
 - [ ] Add a short repository description: `Open-source macOS developer command center for projects, terminals, AI, tools and releases`
 - [ ] Add topics: `macos`, `swift`, `swiftui`, `developer-tools`, `ai`, `ollama`, `open-source`
 - [ ] Add Apple release secrets listed in `docs/RELEASING.md`
 - [ ] Confirm the Developer ID Application certificate is valid
 - [ ] Confirm the Apple Team ID and app-specific notarization password
 - [ ] Optionally enable GitHub Discussions after the repository is public
+
+## Website and community protections
+
+- [x] Static MOME product website under site/ (illustrative demo only).
+- [x] GitHub Pages deployment workflow and website-validation workflow in source.
+- [x] CODEOWNERS expanded to the site, workflows and policy files.
+- [x] Public repository/IP policy and brand/trademark guidelines.
+- [ ] Merge the website PR into main after checks pass.
+- [ ] Enable GitHub Pages under Settings → Pages → Source: GitHub Actions.
+- [ ] Create/enforce a main branch ruleset (PR required, reviews, checks, no force pushes, no deletion).
+- [ ] Enable secret scanning and push protection when available.
+- [ ] Verify website at https://sxnge4444.github.io/MOME/ after deployment.
+- [ ] Verify a clean macOS build, tests and signed/notarized release from a fresh machine.
+- [ ] Verify Last Dices publishing entity and Blanco Studio attribution with rights holders.
 
 ## First drop
 

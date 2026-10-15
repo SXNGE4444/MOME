@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-MOME is currently distributed as a public beta. Security fixes are applied to the latest tagged release and the `main` branch.
+MOME is preparing a public developer beta. Security fixes target the `main` branch and, once signed releases are available, the latest supported tagged release.
 
 ## Reporting a vulnerability
 

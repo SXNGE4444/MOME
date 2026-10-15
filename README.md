@@ -6,6 +6,16 @@
 
 **MOME — Developer Command Center for macOS**
 
+**Public product website:** [MOME on GitHub Pages](https://sxnge4444.github.io/MOME/) *(available once Pages is enabled and the website workflow is deployed)*.
+
+MOME is presented as a **Last Dices** project, with **Blanco Studio** design and engineering collaboration. Our code is available under Apache-2.0; MOME brand identifiers are separately addressed in [TRADEMARKS.md](TRADEMARKS.md).
+
+- [Website source and publishing instructions](site/README.md)
+- [Public repository / IP policy](docs/PUBLIC_REPOSITORY_POLICY.md)
+- [Contributor guidelines](CONTRIBUTING.md)
+- [Security reporting](SECURITY.md)
+
+
 MOME is a native macOS control plane for planning, building, testing, running and shipping software from one dashboard. It orchestrates real local CLIs, applications, simulators, emulators, cloud tools and AI providers rather than replacing them.
 
 ## Public beta status
