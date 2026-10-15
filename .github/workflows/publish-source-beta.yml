@@ -1,0 +1,47 @@
+name: Publish initial MOME source beta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-source-beta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.repository == 'SXNGE4444/MOME' && github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout reviewed main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify version matches source prerelease
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(tr -d '[:space:]' < VERSION)" = "0.1.0-beta.1"
+          test -f docs/BETA_RELEASE_NOTES.md
+      - name: Build, test, and verify locally signed app
+        run: bash scripts/preflight.sh
+      - name: Publish source-only prerelease without unsafe installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="v0.1.0-beta.1"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Source prerelease already exists; no duplicate will be created."
+            exit 0
+          fi
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "MOME $TAG — Source Developer Preview" \
+            --notes-file docs/BETA_RELEASE_NOTES.md \
+            --prerelease
+          gh release view "$TAG" --json tagName,isPrerelease,isDraft,url
