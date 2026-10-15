@@ -6,7 +6,7 @@
 
 **MOME — Developer Command Center for macOS**
 
-**Public product website:** [MOME on GitHub Pages](https://sxnge4444.github.io/MOME/) *(available once Pages is enabled and the website workflow is deployed)*.
+**Official product website:** [MOME at Last Dices](https://www.lastdicesptyltd.co.za/mome). The canonical product route is hosted inside the Last Dices website, separate from this public SwiftUI source repository.
 
 MOME is presented as a **Last Dices** project, with **Blanco Studio** design and engineering collaboration. Our code is available under Apache-2.0; MOME brand identifiers are separately addressed in [TRADEMARKS.md](TRADEMARKS.md).
 
