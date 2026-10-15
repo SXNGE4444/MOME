@@ -16,17 +16,11 @@ Open http://localhost:8080.
 
 No API keys or build step are needed. The dashboard is a **deliberately labeled illustrative UI** for marketing. It does not execute macOS actions. Actual functionality lives in the SwiftUI application.
 
-## Publish with GitHub Pages
+## Official publication on Last Dices
 
-The repository includes a Pages workflow at .github/workflows/pages.yml. In **Settings → Pages → Build and deployment → Source**, select **GitHub Actions**. After the website PR is merged into main, the workflow publishes site/ to the default project URL:
+The official product website is **https://www.lastdicesptyltd.co.za/mome**. It is implemented as a scoped Next.js route in the separate, private Last Dices website repository, rather than using GitHub Pages. This directory preserves the original standalone marketing design concept for reference and experimentation. It is **not** the production website.
 
-https://sxnge4444.github.io/MOME/
-
-The site uses relative asset paths to work at the /MOME/ project path. Setting the Pages source requires repository settings access and cannot be accomplished by source changes alone.
-
-## Custom domain
-
-If you later decide to host under Last Dices (e.g. a MOME subdomain), first add and verify the custom domain in GitHub Pages, configure the appropriate CNAME with the DNS provider, and enable HTTPS. Do **not** add a CNAME file until the actual hostname and DNS are confirmed. Blanco Studio can link to the MOME page without being the production host.
+Do not configure a GitHub Pages custom domain for MOME, and do not point the apex or www DNS to this repository. Publishing the official /mome path belongs to the existing Last Dices Vercel project.
 
 ## Website QA
 

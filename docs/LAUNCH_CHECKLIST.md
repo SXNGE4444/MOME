@@ -43,14 +43,14 @@ These actions cannot be represented by source code alone.
 ## Website and community protections
 
 - [x] Static MOME product website under site/ (illustrative demo only).
-- [x] GitHub Pages deployment workflow and website-validation workflow in source.
+- [x] Local marketing concept and website-validation workflow retained (no longer published through GitHub Pages).
 - [x] CODEOWNERS expanded to the site, workflows and policy files.
 - [x] Public repository/IP policy and brand/trademark guidelines.
-- [ ] Merge the website PR into main after checks pass.
-- [ ] Enable GitHub Pages under Settings → Pages → Source: GitHub Actions.
+- [x] Merge the MOME website concept PR into main.
+- [x] Choose the official product URL: https://www.lastdicesptyltd.co.za/mome (in the Last Dices Vercel site).
 - [ ] Create/enforce a main branch ruleset (PR required, reviews, checks, no force pushes, no deletion).
 - [ ] Enable secret scanning and push protection when available.
-- [ ] Verify website at https://sxnge4444.github.io/MOME/ after deployment.
+- [ ] Verify the official /mome route and the existing Last Dices homepage after production deployment.
 - [ ] Verify a clean macOS build, tests and signed/notarized release from a fresh machine.
 - [ ] Verify Last Dices publishing entity and Blanco Studio attribution with rights holders.
 
